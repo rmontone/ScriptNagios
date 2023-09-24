@@ -44,3 +44,5 @@ done
 # Exibir o conteúdo atualizado do arquivo
 echo "Conteúdo do arquivo:"
 cat "$arquivo"
+#Como usar ./script.sh -d LINHA NOME para deletar um nome
+#Como usar ./script.sh -a LINHA NOME para adicionar um nome
