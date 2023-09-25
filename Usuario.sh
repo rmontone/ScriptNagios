@@ -14,14 +14,35 @@ case $opcao in
     1)
         echo "Adicionar Usuario"
         echo "Digite o nome do usuario seguindo o padrao nome.sobrenome \n Exemplo: fulano.silva"
-        
+        read nomeUsuario();
+
         echo "Deseja adicionar o usuario no grupo authorized_for_system_information?"
         read -p "Escolha (S/N)" AFSY # AFSY por conta do nome authorized_for_system_information
         adicionarAFSY();
+
         echo "Deseja adicionar o usuario no grupo authorized_for_configuration_information"
         read -p "Escolha (S/N)" AFCI # AFCI por conta do nome authorized_for_configuration_information
         adicionarAFCI();
-        echo "Desej"
+
+        echo "Deseja adicionar o usuario no grupo authorized_for_system_commands"
+        read -p "Escolha (S/N)" AFSC # AFSC por conta do nome authorized_for_system_commands
+        adicionarAFSC();
+
+        echo "Deseja adicionar o usuario no grupo authorized_for_all_services"
+        read -p "Escolha (S/N)" AFAS # AFAS por conta do nome authorized_for_all_services
+        adicionarAFAS();
+
+        echo "Deseja adicionar o usuario no grupo authorized_for_all_hosts"
+        read -p "Escolha (S/N)" AFAH # AFAH por conta do nome authorized_for_all_hosts
+        adicionarAFAH();
+
+        echo "Deseja adicionar o usuario no grupo authorized_for_all_service_commands"
+        read -p "Escolha (S/N)" AFASC # AFASC por conta do nome authorized_for_all_service_commands
+        adicionarAFASC();
+
+        echo "Deseja adicionar o usuario no grupo authorized_for_all_host_commands"
+        read -p "Escolha (S/N)" AFAHC # AFAHC por conta do nome authorized_for_all_host_commands
+        adicionarAFAHC();
         ;;
     2)
         echo "Deletar Usuario"
@@ -39,8 +60,8 @@ esac
 
 #authorized_for_system_information=nagiosadmin, username1
 #authorized_for_configuration_information=nagiosadmin, username1
-authorized_for_system_commands=nagiosadmin, username1
-authorized_for_all_services=nagiosadmin, username1
-authorized_for_all_hosts=nagiosadmin, username1
-authorized_for_all_service_commands=nagiosadmin, username1
-authorized_for_all_host_commands=nagiosadmin, username1
+#authorized_for_system_commands=nagiosadmin, username1
+#authorized_for_all_services=nagiosadmin, username1
+#authorized_for_all_hosts=nagiosadmin, username1
+#authorized_for_all_service_commands=nagiosadmin, username1
+#authorized_for_all_host_commands=nagiosadmin, username1
