@@ -46,7 +46,7 @@ case $opcao in
         ;;
     2)
         echo "Deletar Usuario"
-        # Add your code for Option 2 here
+        deletarUsuario();
         ;;
     3)
         echo "Sair"
