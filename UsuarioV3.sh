@@ -84,28 +84,26 @@
         echo "Usuario adicionado com sucesso no grupo authorized_for_all_host_commands"
 }
 #deletarUsuario()
-deletarUsuario() {
-    local nomeUsuario="$1"
-    local temp_file="temp_file"
-    local encontrado=0
-
- if grep -q "^$nomeUsuario," cgi.cfg; then
-    echo "ver se é true"
-        awk -v user="$nomeUsuario" -F, '{
-            for(i=1; i<=NF; i++) {
-                if($i != user) {
-                    if (i > 1) printf ","
-                    printf "%s", $i
+    deletarUsuario() {
+    local nomeUsuario="$1" # está atribuindo um valor à variável nomeUsuario. O valor é obtido a partir do primeiro argumento passado para a função, que é representado por $1.i
+    if grep -qw "$nomeUsuario" "cgi.cfg"; then
+        # Use awk to remove the specific user while preserving the rest of the line
+        awk -v user="$nomeUsuario" -F, '
+            {
+                for(i=1; i<=NF; i++) {
+                    if($i != user) {
+                        if (i > 1) printf ","
+                        printf "%s", $i
+                    }
                 }
+                print ""
             }
-            print ""
-        }' cgi.cfg > "$temp_file" && mv "$temp_file" cgi.cfg
-
+        ' cgi.cfg > temp_file && mv temp_file cgi.cfg
         echo "Usuário $nomeUsuario foi deletado do arquivo cgi.cfg."
     else
-        echo "Erro: Usuário $nomeUsuario não encontrado no arquivo cgi.cfg."
+        echo "O usuário $nomeUsuario não existe no arquivo cgi.cfg."
     fi
-}
+}  
 
 loop_menu=S
 while [[ $loop_menu = "S" || $loop_menu = "s" ]]; do
