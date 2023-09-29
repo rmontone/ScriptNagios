@@ -12,7 +12,6 @@
     local padrao="authorized_for_system_information" # padrao usado na pesquisa do awk
         # Usando o AWK pra dar um update na linha e salvar temporariamente
         awk -v usuario="$nomeUsuario" -v padrao="$padrao" '$0 ~ padrao { gsub(/\r/, ""); print $0 "," usuario; next } { gsub(/\r/, ""); print $0 }' "cgi.cfg" > tmpfile
-
         # Substituindo a original pela temporaria
         mv tmpfile "cgi.cfg"
         echo "Usuario adicionado com sucesso no grupo authorized_for_system_information"
@@ -61,7 +60,8 @@
         mv tmpfile "cgi.cfg"
         echo "Usuario adicionado com sucesso no grupo authorized_for_all_hosts"
     }
-#authorized_for_all_service_commands    
+#authorized_for_all_service_commands
+
     adicionarAFASC() {
     local nomeUsuario="$1" # está atribuindo um valor à variável nomeUsuario. O valor é obtido a partir do primeiro argumento passado para a função, que é representado por $1.i
     local padrao="authorized_for_all_service_commands" # padrao usado na pesquisa do awk
@@ -82,9 +82,24 @@
         # Substituindo a original pela temporaria
         mv tmpfile "cgi.cfg"
         echo "Usuario adicionado com sucesso no grupo authorized_for_all_host_commands"
-    }
+}
+#deletarUsuario()
+    deletarUsuario() {
+    local nomeUsuario="$1" # está atribuindo um valor à variável nomeUsuario. O valor é obtido a partir do primeiro argumento passado para a função, que é representado por $1.i
+        awk -v user="$nomeUsuario" -F, '{ 
+            for(i=1; i<=NF; i++) {
+                if($i != user) {
+                    if (i > 1) printf ","
+                    printf "%s", $i
+                }
+            }
+            print ""
+        }' cgi.cfg > temp_file && mv temp_file cgi.cfg
+        echo "Usuário $nomeUsuario foi deletado do arquivo cgi.cfg."
+}       
     
-    
+loop_menu=S
+while [[ $loop_menu = "S" || $loop_menu = "s" ]]; do
     echo "Menu:"
     echo "1. Adicionar Usuario"
     echo "2. Deletar Usuario"
@@ -147,7 +162,9 @@
         ;;
         2)
             echo "Deletar Usuario"
-            deletarUsuario;
+            read -p "Digite o nome do usuário que deseja deletar: " nomeUsuario #Variavel nomeUsuario criada localmente para posteriormente adicionar no final
+            deletarUsuario "$nomeUsuario"
+            echo "O usuário $nomeUsuario foi deletado"
             ;;
         3)
             echo "Sair"
@@ -157,7 +174,7 @@
             echo "Opção invalida (1/2/3)."
             ;;
     esac
-    
+done    
     
     #authorized_for_system_information=nagiosadmin,username1
     #authorized_for_configuration_information=nagiosadmin,username1
