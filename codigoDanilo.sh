@@ -4,21 +4,21 @@
 adicionarUsuarioAoGrupo() {
     local nomeUsuario="$1"
     local grupo="$2"
-    
+
     if grep -q "$grupo" "cgi.cfg"; then
         if grep -q "$nomeUsuario" "cgi.cfg"; then
-            echo "O usuario $nomeUsuario ja esta no grupo $grupo." 
+            echo "O usuário $nomeUsuario já está no grupo $grupo."
         else
-            sed -i "/$grupo/ s/$/,$nomeUsuario/" "cgi.cfg" 
-            echo "Usuario $nomeUsuario adicionado ao grupo $grupo com sucesso."
-        fi 
+            sed -i "/$grupo/ s/$/,$nomeUsuario/" "cgi.cfg"
+            echo "Usuário $nomeUsuario adicionado ao grupo $grupo com sucesso."
+        fi
     else
-        echo "O grupo $grupo não foi encontrado no arquivo cgi.cfg."
+        echo "O grupo $grupo não foi encontrado em cgi.cfg."
     fi
 }
 
 # Função para deletar um usuário
-removerUsuarioDoGrupo() {
+deletarUsuario() {
     local nomeUsuario="$1"
     local grupo="$2"
 
@@ -33,7 +33,6 @@ removerUsuarioDoGrupo() {
         echo "O grupo $grupo não foi encontrado em cgi.cfg."
     fi
 }
-
 # Loop principal do menu
 while true; do
     clear
