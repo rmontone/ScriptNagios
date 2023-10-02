@@ -6,32 +6,34 @@ adicionarUsuarioAoGrupo() {
     local grupo="$2"
 
     if grep -q "$grupo" "cgi.cfg"; then
-        if grep -q "$nomeUsuario" "cgi.cfg"; then
+        #if grep -q "$nomeUsuario" "cgi.cfg"; then
             echo "O usuário $nomeUsuario já está no grupo $grupo."
-        else
+        #else
             sed -i "/$grupo/ s/$/,$nomeUsuario/" "cgi.cfg"
             echo "Usuário $nomeUsuario adicionado ao grupo $grupo com sucesso."
-        fi
+        #fi
     else
         echo "O grupo $grupo não foi encontrado em cgi.cfg."
     fi
 }
 
-# Função para deletar um usuário
-deletarUsuario() {
+# Função para deletar um usuário de todos os grupos listados
+removerUsuarioDeGrupos() {
     local nomeUsuario="$1"
-    local grupo="$2"
+    local grupos=("authorized_for_system_information" "authorized_for_configuration_information" "authorized_for_system_commands" "authorized_for_all_services" "authorized_for_all_hosts" "authorized_for_all_service_commands" "authorized_for_all_host_commands")
 
-    if grep -q "$grupo" "cgi.cfg"; then
-        if grep -q "$nomeUsuario" "cgi.cfg"; then
-            sed -i "/$grupo/ s/,$nomeUsuario//" "cgi.cfg"
-            echo "Usuário $nomeUsuario removido do grupo $grupo com sucesso."
+    for grupo in "${grupos[@]}"; do
+        if grep -q "$grupo" "cgi.cfg"; then
+            if grep -q "$nomeUsuario" "cgi.cfg"; then
+                sed -i "/$grupo/ s/,$nomeUsuario//" "cgi.cfg"
+                echo "Usuário $nomeUsuario removido do grupo $grupo com sucesso."
+            else
+                echo "O usuário $nomeUsuario não está no grupo $grupo."
+            fi
         else
-            echo "O usuário $nomeUsuario não está no grupo $grupo."
+            echo "O grupo $grupo não foi encontrado em cgi.cfg."
         fi
-    else
-        echo "O grupo $grupo não foi encontrado em cgi.cfg."
-    fi
+    done
 }
 # Loop principal do menu
 while true; do
@@ -50,10 +52,19 @@ while true; do
             read -p "Digite o nome do usuário seguindo o padrão nome.sobrenome (Exemplo: fulano.silva): " nomeUsuario
             
             # Menu para escolher grupos
+           
+            authorized_for_system_information=authorized_for_system_information
+            authorized_for_configuration_information=authorized_for_configuration_information
+            authorized_for_system_commands=authorized_for_system_commands
+            authorized_for_all_services=authorized_for_all_services
+            authorized_for_all_hosts=authorized_for_all_hosts
+            authorized_for_all_service_commands=authorized_for_all_service_commands
+            authorized_for_all_host_commands=authorized_for_all_host_commands
+    
             while true; do
                 echo "Escolha o grupo para adicionar o usuário:"
-                echo "1. authorized_for_system_information"
-                echo "2. authorized_for_configuration_information"
+                echo "1. authorized_for_system_information" 
+                echo "2. authorized_for_configuration_information" 
                 echo "3. authorized_for_system_commands"
                 echo "4. authorized_for_all_services"
                 echo "5. authorized_for_all_hosts"
@@ -64,22 +75,22 @@ while true; do
                 read -p "Escolha um grupo (1/2/3/4/5/6/7/8): " opcaoGrupo
                 
                 case $opcaoGrupo in
-                    1) adicionarUsuarioAoGrupo "$nomeUsuario" "authorized_for_system_information" ;;
-                    2) adicionarUsuarioAoGrupo "$nomeUsuario" "authorized_for_configuration_information" ;;
-                    3) adicionarUsuarioAoGrupo "$nomeUsuario" "authorized_for_system_commands" ;;
-                    4) adicionarUsuarioAoGrupo "$nomeUsuario" "authorized_for_all_services" ;;
-                    5) adicionarUsuarioAoGrupo "$nomeUsuario" "authorized_for_all_hosts" ;;
-                    6) adicionarUsuarioAoGrupo "$nomeUsuario" "authorized_for_all_service_commands" ;;
-                    7) adicionarUsuarioAoGrupo "$nomeUsuario" "authorized_for_all_host_commands" ;;
+                    1) adicionarUsuarioAoGrupo $nomeUsuario $authorized_for_system_information ;;
+                    2) adicionarUsuarioAoGrupo $nomeUsuario $authorized_for_configuration_information ;;
+                    3) adicionarUsuarioAoGrupo $nomeUsuario $authorized_for_system_commands ;;
+                    4) adicionarUsuarioAoGrupo $nomeUsuario $authorized_for_all_services ;;
+                    5) adicionarUsuarioAoGrupo $nomeUsuario $authorized_for_all_hosts ;;
+                    6) adicionarUsuarioAoGrupo $nomeUsuario $authorized_for_all_service_commands ;;
+                    7) adicionarUsuarioAoGrupo $nomeUsuario $authorized_for_all_host_commands ;;
                     8) break ;;
                     *) echo "Opção inválida" ;;
                 esac
             done
             ;;
         2)
-            echo "Deletar Usuário"
-            read -p "Digite o nome do usuário que deseja deletar: " nomeUsuario
-            deletarUsuario "$nomeUsuario"
+            echo "Remover Usuário de todos os Grupos"
+            read -p "Digite o nome do usuário que deseja deletar de todos os grupos: " nomeUsuario
+            removerUsuarioDeGrupos "$nomeUsuario"
             ;;
         3)
             echo "Sair"
